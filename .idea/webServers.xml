@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d59e7ee2-e0b1-4dc2-b554-d9511339e79b" name="bw.byticsgroup.net">
+        <fileTransfer rootFolder="/root/testApi" accessType="SFTP" host="bws.byticsgroup.net" port="22" sshConfigId="e8f4a999-7938-45f1-9792-ac2c5833931b" sshConfig="root@bws.byticsgroup.net:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

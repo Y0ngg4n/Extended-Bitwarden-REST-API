@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="bws.byticsgroup.net" id="e8f4a999-7938-45f1-9792-ac2c5833931b" keyPath="C:\Users\aschuele\Documents\ssh\arbeit\aschuele.ppk" port="22" nameFormat="DESCRIPTIVE" username="root" />
+    </configs>
+  </component>
+</project>

@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
-const auth = require('./middleware/auth');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -16,8 +15,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware
+
+const docker = require('./middleware/docker_startup');
 
 //Routes
+app.use(require('./routes/account'));
 app.use(require('./routes/item'));
 
 // catch 404 and forward to error handler
