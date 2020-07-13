@@ -10,6 +10,7 @@ const containerUtils = require('../utils/container')
 router.get('/collection/item', dockerStartup, async (req, res) => {
     {
         try {
+            await containerUtils.sync(req.header('username'))
             var result = await getItem(req.header('username'), req.header('item'))
             res.send(JSON.parse(result.toString()))
         } catch (error) {
@@ -26,7 +27,8 @@ const getItem = async (username, item) => {
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
-        return await spawn('docker', ['exec', '-e', 'BW_SESSION=' + docker.container.get(container_name), container_name, 'bw', 'get', 'item', item])
+        return await spawn('docker', ['exec', '-e', 'BW_SESSION='
+        + docker.container.get(container_name), container_name, 'bw', 'get', 'item', item])
     } else {
         throw new Error("You have to login first")
     }
