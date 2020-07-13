@@ -1,4 +1,5 @@
 const docker = require('../states/docker')
+
 const dockerCheckStartup = async (req, res, next) => {
     try {
         console.log("CheckStartup")

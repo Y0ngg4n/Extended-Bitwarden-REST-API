@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
 
-const docker = require('./middleware/docker_startup');
+const docker = require('./middleware/dockerStartup');
 
 //Routes
 app.use(require('./routes/account'));

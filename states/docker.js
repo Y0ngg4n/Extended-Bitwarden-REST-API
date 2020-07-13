@@ -1,6 +1,7 @@
 startup = false;
 
-container = []
+container = new Map()
+
 module.exports = {
     startup,
     container,
