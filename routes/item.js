@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const docker = require('../states/docker');
 const spawn = require('await-spawn')
-const config = require('../config')
 
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
@@ -27,10 +26,14 @@ const getItem = async (username, item) => {
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
-        return await spawn('docker', ['exec', '-e', 'BW_SESSION='
-        + docker.container.get(container_name), container_name, 'bw', 'get', 'item', item])
+        try {
+            return await spawn('docker', ['exec', '-e', 'BW_SESSION='
+            + docker.container.get(container_name), container_name, 'bw', 'get', 'item', item])
+        } catch (e) {
+            throw new Error("Could not get item")
+        }
     } else {
-        throw new Error("You have to login first")
+        throw new Error("You have to login first or check if item exist")
     }
 }
 
