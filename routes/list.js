@@ -9,6 +9,7 @@ const containerUtils = require('../utils/container')
 router.get('/list/items', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
+        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'items')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
@@ -22,6 +23,7 @@ router.get('/list/items', dockerStartup, async (req, res) => {
 router.get('/list/folders', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
+        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'folders')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
@@ -36,6 +38,7 @@ router.get('/list/folders', dockerStartup, async (req, res) => {
 router.get('/list/collections', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
+        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'collections')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
@@ -49,6 +52,7 @@ router.get('/list/collections', dockerStartup, async (req, res) => {
 router.get('/list/organisations', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
+        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'organisations')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
@@ -62,6 +66,7 @@ router.get('/list/organisations', dockerStartup, async (req, res) => {
 router.get('/list/org-collections', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
+        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'org-collections')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
@@ -75,6 +80,7 @@ router.get('/list/org-collections', dockerStartup, async (req, res) => {
 router.get('/list/org-members', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
+        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'org-members')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
@@ -85,8 +91,6 @@ router.get('/list/org-members', dockerStartup, async (req, res) => {
     }
 })
 
-
-
 const buildArgs = (req) => {
     let args = ""
     if (req.header('search')) args += " --search " + req.header('search')
@@ -95,7 +99,6 @@ const buildArgs = (req) => {
     if(req.header('collectionid')) args += " --collectionid" + req.header('collectionid')
     if(req.header('organisationid')) args += " --organisationid" + req.header('organisationid')
     if(req.header('trash')) args += " --trash" + req.header('trash')
-
 
     return args
 }
