@@ -27,6 +27,8 @@ app.use(require('./routes/create'));
 app.use(require('./routes/edit'));
 app.use(require('./routes/delete'));
 app.use(require('./routes/generate'));
+app.use(require('./routes/encode'));
+app.use(require('./routes/restore'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
