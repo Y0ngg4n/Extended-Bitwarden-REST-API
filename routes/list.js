@@ -6,6 +6,7 @@ const spawn = require('await-spawn')
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
 
+
 router.get('/list/items', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
@@ -94,11 +95,11 @@ router.get('/list/org-members', dockerStartup, async (req, res) => {
 const buildArgs = (req) => {
     let args = ""
     if (req.header('search')) args += " --search " + req.header('search')
-    if(req.header('url')) args += " --url " + req.header('url')
-    if(req.header('folderid')) args += " --folderid " + req.header('folderid')
-    if(req.header('collectionid')) args += " --collectionid" + req.header('collectionid')
-    if(req.header('organisationid')) args += " --organisationid" + req.header('organisationid')
-    if(req.header('trash')) args += " --trash" + req.header('trash')
+    if (req.header('url')) args += " --url " + req.header('url')
+    if (req.header('folderid')) args += " --folderid " + req.header('folderid')
+    if (req.header('collectionid')) args += " --collectionid" + req.header('collectionid')
+    if (req.header('organisationid')) args += " --organisationid" + req.header('organisationid')
+    if (req.header('trash')) args += " --trash"
 
     return args
 }
@@ -108,8 +109,9 @@ const listObject = async (username, args, type) => {
 
     if (docker.container.has(container_name)) {
         try {
+            console.log(args)
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
-            + docker.container.get(container_name), container_name, 'bw', 'list', type, args])
+            + docker.container.get(container_name), container_name, 'bash', '-c', 'bw list ' + type + args])
         } catch (e) {
             console.error(e.stderr.toString())
             throw new Error("Could not get items")

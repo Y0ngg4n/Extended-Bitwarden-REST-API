@@ -23,6 +23,8 @@ const docker = require('./middleware/dockerStartup');
 app.use(require('./routes/account'));
 app.use(require('./routes/get'));
 app.use(require('./routes/list'));
+app.use(require('./routes/create'));
+app.use(require('./routes/edit'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

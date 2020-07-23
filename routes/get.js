@@ -209,7 +209,7 @@ const buildArgs = (req) => {
     if (req.header('itemid')) args += " --itemid " + req.header('itemid')
     if (req.header('output')) args += " --output " + req.header('output')
     if (req.header('organizationid')) args += " --organizationid " + req.header('organizationid')
-
+    if (req.header('raw')) args += " --raw"
     return args
 }
 
@@ -219,8 +219,9 @@ const getObject = async (username, args, type, search) => {
 
     if (docker.container.has(container_name)) {
         try {
+            // TODO: Fix Attachments
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
-            + docker.container.get(container_name), container_name, 'bw', 'get', type, search, args])
+            + docker.container.get(container_name), container_name, 'bash', '-c', 'bw get ' + type + ' ' + search + args])
         } catch (e) {
             throw new Error("Could not get item")
         }
