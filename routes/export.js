@@ -3,30 +3,35 @@ const router = express.Router();
 const docker = require('../states/docker');
 const spawn = require('await-spawn')
 
-const sync = require('../middleware/sync');
+const sync = require('../middleware/dockerStartup');
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
 const errorUtils = require('../utils/error')
 
-// TODO: Contact Support because delete is not workin right
-
-router.post('/share', dockerStartup, sync, async (req, res) => {
+router.get('/export', dockerStartup, sync, async (req, res) => {
     try {
-        let {id, organizationid, json} = req.body;
-        const result = await shareObject(req.header('username'), id, organizationid, json);
-        res.send(JSON.parse(result.toString()))
+        const args = buildArgs(req)
+        const result = await exportObject(req.header('username'), req.header('password'), args);
+        res.send(result.toString())
     } catch (error) {
         await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-const shareObject = async (username, id, organizationid, json) => {
+const buildArgs = (req) => {
+    let args = ""
+    if (req.header('organizationid')) args += " --organizationid " + req.header('organizationid')
+    if (req.header('format')) args += " --format " + req.header('format')
+    return args
+}
+
+const exportObject = async (username, password, args) => {
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
         try {
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
-            + docker.container.get(container_name), container_name, 'bash', '-c', 'bw share ' + id + " " + organizationid + " " + json])
+            + docker.container.get(container_name), container_name, 'bash', '-c', 'bw export ' + password + args])
         } catch (e) {
             errorUtils.printConsoleError(e)
             throw new Error("Could not edit item")

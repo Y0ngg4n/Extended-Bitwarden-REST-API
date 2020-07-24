@@ -11,7 +11,7 @@ const errorUtils = require('../utils/error')
 router.post('/restore', dockerStartup, sync, async (req, res) => {
     try {
         const {id} = req.body
-        const result = await restore(req.header('username'), id);
+        await restore(req.header('username'), id);
         res.status(201).send()
     } catch (error) {
         await errorUtils.sendErrorMessage(error, res)
