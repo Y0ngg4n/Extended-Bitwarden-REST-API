@@ -3,59 +3,45 @@ const router = express.Router();
 const docker = require('../states/docker');
 const spawn = require('await-spawn')
 
+const sync = require('../middleware/sync');
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
+const errorUtils = require('../utils/error')
 
-
-router.post('/create/item', dockerStartup, async (req, res) => {
+router.post('/create/item', dockerStartup, sync, async (req, res) => {
     try {
-        const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         let {json} = req.body;
         const result = await createObject(req.header('username'), 'item', json);
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-router.post('/create/folder', dockerStartup, async (req, res) => {
+router.post('/create/folder', dockerStartup, sync, async (req, res) => {
     try {
-        const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         const {json} = req.body;
         const result = await createObject(req.header('username'), 'folder', json);
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-router.post('/create/org-collection', dockerStartup, async (req, res) => {
+router.post('/create/org-collection', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         const {json} = req.body;
         const result = await createOrgCollection(req.header('username'), 'org-collection', json, args);
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-router.post('/create/attachment', dockerStartup, async (req, res) => {
+router.post('/create/attachment', dockerStartup, sync, async (req, res) => {
     try {
         let args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         const {file, json} = req.body;
         console.log(file)
         const attachment = await createAttachmentFile(req.header('username'), file)
@@ -66,10 +52,7 @@ router.post('/create/attachment', dockerStartup, async (req, res) => {
             res.send(JSON.parse(result.toString()))
         } else throw new Error("No file provided")
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
@@ -89,7 +72,7 @@ const createAttachmentFile = async (username, file) => {
             await spawn('rm', ['-rf', tmpFile])
             return dockerTmpFile
         } catch (e) {
-            console.error(e.toString())
+            errorUtils.printConsoleError(e)
             throw new Error("Could not create attachment file")
         }
     }
@@ -100,7 +83,7 @@ const removeAttachmentFile = async (username, attachment) => {
     try {
         await spawn('docker', ['exec', container_name, 'rm', '-rf', attachment])
     } catch (e) {
-        console.error(e.toString())
+        errorUtils.printConsoleError(e)
         throw new Error("Could not remove attachment file")
     }
 }
@@ -122,8 +105,7 @@ const createObject = async (username, type, json) => {
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
             + docker.container.get(container_name), container_name, 'bw', 'create', type, json])
         } catch (e) {
-            console.error(e.stderr.toString())
-            console.error(e.toString())
+            errorUtils.printConsoleError(e)
             throw new Error("Could not create item")
         }
     } else {
@@ -141,8 +123,7 @@ const createOrgCollection = async (username, type, json, args) => {
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
             + docker.container.get(container_name), container_name, 'bash','-c', 'bw create ' + type + args + " " +  json])
         } catch (e) {
-            console.error(e.stderr.toString())
-            console.error(e.toString())
+            errorUtils.printConsoleError(e)
             throw new Error("Could not create item")
         }
     } else {
@@ -162,8 +143,7 @@ const createAttachment = async (username, type, args, json) => {
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
             + docker.container.get(container_name), container_name, 'bw', 'create', type + " " + args, json])
         } catch (e) {
-            console.error(e.stderr.toString())
-            console.error(e.toString())
+            errorUtils.printConsoleError(e)
             throw new Error("Could not create item")
         }
     } else {

@@ -1,8 +1,9 @@
-const docker = require('../states/docker')
+const containerUtils = require('../utils/container')
 
 const dockerCheckStartup = async (req, res, next) => {
     try {
-        if (docker.startup) next(); else throw new Error("API not fully started")
+        await containerUtils.sync(req.header('username'))
+        next();
     }  catch (error) {
         res.status(423).send({error: error.message});
     }

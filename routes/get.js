@@ -3,36 +3,28 @@ const router = express.Router();
 const docker = require('../states/docker');
 const spawn = require('await-spawn')
 
+const sync = require('../middleware/sync');
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
+const errorUtils = require('../utils/error')
 
-
-router.get('/get/item', dockerStartup, async (req, res) => {
+router.get('/get/item', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'item', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/username', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'username', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
@@ -40,15 +32,10 @@ router.get('/get/username', dockerStartup, async (req, res) => {
 router.get('/get/password', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'password', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
@@ -56,150 +43,100 @@ router.get('/get/password', dockerStartup, async (req, res) => {
 router.get('/get/uri', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'uri', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/totp', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'totp', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/exposed', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'exposed', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/attachment', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'attachment', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/folder', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'folder', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/collection', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'collection', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/org-collection', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'org-collection', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/organization', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'organization', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/template', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'template', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 router.get('/get/fingerprint', dockerStartup, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await getObject(req.header('username'), args, 'fingerprint', req.header('search'))
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
-
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 

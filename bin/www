@@ -9,6 +9,8 @@ var http = require('http');
 const spawn = require('await-spawn')
 const config = require('../config')
 const docker = require("../states/docker");
+const errorUtils = require("../utils/error");
+const consoleColors = require("../utils/consoleColors");
 
 /**
  * Get port from environment and store in Express.
@@ -104,38 +106,39 @@ function onListening() {
 async function dockerStartup() {
     //Remove containers
     try {
+        console.log(consoleColors.infoPrefix + "Check docker available" + consoleColors.reset)
         await spawn('docker')
     } catch (e) {
         console.error("Please check again, that you have the latest docker installed")
-        process.exit(e.errorCode)
+        errorUtils.printConsoleError(e)
     }
 
     try {
-        console.log("Clean up old docker slave container")
+        console.log(consoleColors.infoPrefix + "Clean up old docker slave container" + consoleColors.reset)
         await spawn('bash', ['-c', "docker ps -a | awk '{ print $1,$2 }' | grep extended-bitwarden-rest-api-slave | awk '{print $1 }' | xargs -I {} docker rm -f {}"])
     } catch (e) {
-        console.log("Could not clean up docker slave container")
-        console.error(e.toString())
+        console.error("Could not clean up docker slave container")
+        errorUtils.printConsoleError(e)
     }
 
     try {
-        console.log("Clean up old docker slave images")
+        console.log(consoleColors.infoPrefix + "Clean up old docker slave images" + consoleColors.reset)
         await spawn('docker', ['image', 'rm', '-f', config.slave_docker_image_name])
     } catch (e) {
-        console.error("Could not clean up docker slave images")
-        console.error(e.message)
+        console.error("Could not clean up docker slave images" + consoleColors.reset)
+        errorUtils.printConsoleError(e)
         process.exit(e.errorCode)
     }
 
     try {
-        console.log("Building docker slave images")
+        console.log(consoleColors.infoPrefix + "Building docker slave images" + consoleColors.reset)
         await spawn('docker', ['build', '-f', './slaves/Dockerfile', '-t', config.slave_docker_image_name, './slaves/'])
     } catch (e) {
-        console.error("Could not build docker slave images")
-        console.error(e.message)
+        console.error(consoleColors.warningPrefix + "Could not build docker slave images" + consoleColors.reset)
+        errorUtils.printConsoleError(e)
         process.exit(e.errorCode)
     }
 
     docker.startup = true
-    console.log("Docker startup finished!")
+    console.log(consoleColors.infoPrefix + consoleColors.green + "Docker startup finished!" + consoleColors.reset)
 }

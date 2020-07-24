@@ -8,11 +8,13 @@ const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
 const errorUtils = require('../utils/error')
 
-router.get('/generate', dockerStartup, sync, async (req, res) => {
+// TODO: Contact Support because delete is not workin right
+
+router.post('/share', dockerStartup, sync, async (req, res) => {
     try {
-        const args = buildArgs(req)
-        const result = await generate(req.header('username'), args);
-        res.send(result.toString())
+        let {id} = req.body;
+        const result = await deleteObject(req.header('username'), 'item', args, id);
+        res.send(JSON.parse(result.toString()))
     } catch (error) {
         await errorUtils.sendErrorMessage(error, res)
     }
@@ -20,25 +22,20 @@ router.get('/generate', dockerStartup, sync, async (req, res) => {
 
 const buildArgs = (req) => {
     let args = ""
-    if (req.header('uppercase')) args += " --uppercase"
-    if (req.header('lowercase')) args += " --lowercase"
-    if (req.header('number')) args += " --number"
-    if (req.header('special')) args += " --special"
-    if (req.header('passphrase')) args += " --passphrase"
-    if (req.header('length')) args += " --length " + req.header('length')
-    if (req.header('words')) args += " --words " + req.header('words')
-    if (req.header('seperator')) args += " --seperator " + req.header('seperator')
-
+    const {organizationid, itemid, permanent} = req.body;
+    if (organizationid) args += " --organizationid " + organizationid
+    if (itemid) args += " --organizationid " + itemid
+    if (permanent) args += " --permanent"
     return args
 }
 
-const generate = async (username, args) => {
+const deleteObject = async (username, type, args, id) => {
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
         try {
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
-            + docker.container.get(container_name), container_name, 'bash', '-c', 'bw generate' + args])
+            + docker.container.get(container_name), container_name, 'bash', '-c', 'bw delete' + args + " " + type + " " + id])
         } catch (e) {
             errorUtils.printConsoleError(e)
             throw new Error("Could not edit item")

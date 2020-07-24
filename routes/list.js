@@ -3,92 +3,69 @@ const router = express.Router();
 const docker = require('../states/docker');
 const spawn = require('await-spawn')
 
+const sync = require('../middleware/sync');
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
+const errorUtils = require('../utils/error')
 
-
-router.get('/list/items', dockerStartup, async (req, res) => {
+router.get('/list/items', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'items')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-router.get('/list/folders', dockerStartup, async (req, res) => {
+router.get('/list/folders', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'folders')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
 
-router.get('/list/collections', dockerStartup, async (req, res) => {
+router.get('/list/collections', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'collections')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-router.get('/list/organisations', dockerStartup, async (req, res) => {
+router.get('/list/organisations', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'organisations')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-router.get('/list/org-collections', dockerStartup, async (req, res) => {
+router.get('/list/org-collections', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'org-collections')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
-router.get('/list/org-members', dockerStartup, async (req, res) => {
+router.get('/list/org-members', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        await containerUtils.sync(req.header('username'))
         var result = await listObject(req.header('username'), args, 'org-members')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
-        if (!error.message) {
-            if (!error.stderr) res.status(401).send({error: error});
-            else res.status(401).send({error: error.stderr.toString()});
-        } else res.status(401).send({error: error.message});
+        await errorUtils.sendErrorMessage(error, res)
     }
 })
 
@@ -109,11 +86,10 @@ const listObject = async (username, args, type) => {
 
     if (docker.container.has(container_name)) {
         try {
-            console.log(args)
             return await spawn('docker', ['exec', '-e', 'BW_SESSION='
             + docker.container.get(container_name), container_name, 'bash', '-c', 'bw list ' + type + args])
         } catch (e) {
-            console.error(e.stderr.toString())
+            errorUtils.printConsoleError(e)
             throw new Error("Could not get items")
         }
     } else {

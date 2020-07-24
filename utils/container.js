@@ -12,7 +12,7 @@ const sync = async (username) => {
         await spawn('docker', ['exec', '-e', 'BW_SESSION='
         + docker.container.get(container_name), container_name, 'bw', 'sync'])
     } catch (e) {
-        console.error(e.toString())
+        errorUtils.printConsoleError(e)
         throw new Error("Could not sync")
     }
 }
