@@ -5,7 +5,7 @@ It works with Docker and the [Bitwarden-CLI](https://github.com/bitwarden/cli).
 
 The problem is that the default REST API does not contains the features to get and edit sensitive data.
 
-The basic prinziple is that it spawns a docker container for each user, 
+The basic principle is that it spawns a docker container for each user, 
 to provide session consistency for multiple users, and clears them on startup.
 ## Features:
   - Full Wrapper for all Bitwarden CLI Commands (excluding lock and unlock, because they are useless)
