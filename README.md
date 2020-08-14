@@ -1,7 +1,8 @@
 # Extended Bitwarden REST API
 
 This Node.js REST API extends the [Bitwarden](https://bitwarden.com) REST API.
-It works with Docker and the [Bitwarden-CLI](https://github.com/bitwarden/cli)
+It works with Docker and the [Bitwarden-CLI](https://github.com/bitwarden/cli).
+
 The problem is that the default REST API does not contains the features to get and edit sensitive data.
 
 The basic prinziple is that it spawns a docker container for each user, 
