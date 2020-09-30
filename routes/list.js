@@ -39,10 +39,10 @@ router.get('/list/collections', dockerStartup, sync, async (req, res) => {
     }
 })
 
-router.get('/list/organisations', dockerStartup, sync, async (req, res) => {
+router.get('/list/organizations', dockerStartup, sync, async (req, res) => {
     try {
         const args = buildArgs(req)
-        var result = await listObject(req.header('username'), args, 'organisations')
+        var result = await listObject(req.header('username'), args, 'organizations')
         res.send(JSON.parse(result.toString()))
     } catch (error) {
         await errorUtils.sendErrorMessage(error, res)
@@ -75,7 +75,7 @@ const buildArgs = (req) => {
     if (req.header('url')) args += " --url " + req.header('url')
     if (req.header('folderid')) args += " --folderid " + req.header('folderid')
     if (req.header('collectionid')) args += " --collectionid" + req.header('collectionid')
-    if (req.header('organisationid')) args += " --organisationid" + req.header('organisationid')
+    if (req.header('organizationid')) args += " --organizationid" + req.header('organizationid')
     if (req.header('trash')) args += " --trash"
 
     return args
