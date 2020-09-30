@@ -11,7 +11,7 @@ const errorUtils = require('../utils/error')
 router.get('/status', dockerStartup, sync, async (req, res) => {
     try {
         const result = await generate(req.header('username'));
-        res.send(result.toString())
+        res.status(200).send(result.toString())
     } catch (error) {
         await errorUtils.sendErrorMessage(error, res)
     }
