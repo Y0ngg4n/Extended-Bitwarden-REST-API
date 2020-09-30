@@ -49,7 +49,7 @@ And of course this REST API itself is open source with a [public repository](htt
 ## Installation
 
 - Install [Docker](https://docs.docker.com/get-docker/)
-- Install [Node.js](https://nodejs.org/en/download/) (or use docker image)
+- Install [Node.js](https://nodejs.org/en/download/) (Version has to be newer than 7.6 or use docker image)
 
 ```sh
 git clone https://github.com/Y0ngg4n/Extended-Bitwarden-REST-API.git
