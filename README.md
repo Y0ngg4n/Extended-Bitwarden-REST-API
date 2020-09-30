@@ -53,7 +53,7 @@ And of course this REST API itself is open source with a [public repository](htt
 
 ```sh
 git clone https://github.com/Y0ngg4n/Extended-Bitwarden-REST-API.git
-cd Extended-Bitwarden-REST-API
+cd Extended-Bitwarden-REST-API/
 npm start
 ```
 
