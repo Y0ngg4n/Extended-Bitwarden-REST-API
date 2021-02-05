@@ -57,6 +57,10 @@ cd Extended-Bitwarden-REST-API/
 npm start
 ```
 
+## Request Documentation
+
+[Swagger.io](https://app.swaggerhub.com/apis/OblivionCoding/ExtendedBitwardenRestApi/0.1.0)
+
 ### Development
 
 Want to contribute? Great!
