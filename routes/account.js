@@ -35,7 +35,7 @@ const login = async (username, password, server) => {
 
     if (!docker.container.has(container_name)) {
         try {
-            await spawn('docker', ['run', '--name', container_name, '-d', config.slave_docker_image_name])
+            await spawn('docker', ['run', '--rm', '--name', container_name, '-d', config.slave_docker_image_name])
         } catch (e) {
             errorUtils.printConsoleError(e)
             throw new Error("Could not start a docker session container")
