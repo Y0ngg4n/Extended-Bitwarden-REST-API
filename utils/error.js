@@ -10,7 +10,8 @@ const sendErrorMessage = async (error, res) => {
 const printConsoleError = (e) => {
     console.error(consoleColors.red + "########### Error ##########")
     console.error(consoleColors.errorPrefix + e.toString())
-    console.error(consoleColors.errorPrefix + e.stderr.toString())
+    if(e.stderr)
+        console.error(consoleColors.errorPrefix + e.stderr.toString())
     console.error("############################" + consoleColors.reset)
 }
 
