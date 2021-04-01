@@ -50,6 +50,7 @@ const buildArgs = (req) => {
 }
 
 const editObject = async (username, type, args, id, json) => {
+    json = encodeToBase64(json);
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
