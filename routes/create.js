@@ -6,6 +6,7 @@ const spawn = require('await-spawn')
 const sync = require('../middleware/sync');
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
+const encodeUtils = require('../utils/encode')
 const errorUtils = require('../utils/error')
 
 router.post('/create/item', dockerStartup, sync, async (req, res) => {
@@ -98,7 +99,7 @@ const buildArgs = (req) => {
 }
 
 const createObject = async (username, type, json) => {
-    json = encodeToBase64(json);
+    json = encodeUtils.encodeToBase64(json);
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
@@ -116,7 +117,7 @@ const createObject = async (username, type, json) => {
 
 // TODO: Fix "--organizationid <organizationid> does not match request object."
 const createOrgCollection = async (username, type, json, args) => {
-    json = encodeToBase64(json);
+    json = encodeUtils.encodeToBase64(json);
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
@@ -135,7 +136,7 @@ const createOrgCollection = async (username, type, json, args) => {
 
 // TODO: Fix create attachment (transform in bash -c)
 const createAttachment = async (username, type, args, json) => {
-    json = encodeToBase64(json);
+    json = encodeUtils.encodeToBase64(json);
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {

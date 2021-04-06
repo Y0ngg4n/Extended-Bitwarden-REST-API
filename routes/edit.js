@@ -6,6 +6,7 @@ const spawn = require('await-spawn')
 const sync = require('../middleware/sync');
 const dockerStartup = require('../middleware/dockerStartup');
 const containerUtils = require('../utils/container')
+const encodeUtils = require('../utils/encode')
 const errorUtils = require('../utils/error')
 
 router.post('/edit/item', dockerStartup, sync, async (req, res) => {
@@ -50,7 +51,7 @@ const buildArgs = (req) => {
 }
 
 const editObject = async (username, type, args, id, json) => {
-    json = encodeToBase64(json);
+    json = encodeUtils.encodeToBase64(json);
     const container_name = containerUtils.getContainerName(username)
 
     if (docker.container.has(container_name)) {
