@@ -8,6 +8,8 @@ The problem is that the default REST API does not contains the features to get a
 The basic principle is that it spawns a docker container for each user, 
 to provide session consistency for multiple users, and clears them on startup.
 
+The principle is described in this [Blog Post](https://blog.oblivioncoding.pro/extended-bitwarden-rest-api/)
+
 ## Features:
   - Full Wrapper for all Bitwarden CLI Commands (excluding lock and unlock, because they are useless)
   - Session consistency
@@ -69,3 +71,7 @@ Just make a Pull Request or open an Issue!
 
 ### Docker
 You can find the docker images at [Dockerhub](https://hub.docker.com/u/yonggan)
+
+-------
+
+Thanks to @sutidor for his active engagement at this repository :)
