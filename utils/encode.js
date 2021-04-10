@@ -1,9 +1,16 @@
-function encodeToBase64(data){
-    let buff = new Buffer(data, 'utf8');
-    return buff.toString('base64');
+const encodeToBase64 = (json) => {
+    let buff = new Buffer.from(JSON.stringify(json), 'utf8');
+    buff = buff.toString('base64');
+    return buff;
 }
 
-function decodeFromBase64(data){
-    let buff = new Buffer(data, 'base64');
-    return buff.toString('utf-8');
+const decodeFromBase64 = (string) => {
+    let buff = new Buffer.from(string, 'base64');
+    buff = JSON.parse(buff.toString('utf-8'));
+    return buff;
+}
+
+module.exports = {
+    encodeToBase64,
+    decodeFromBase64
 }
